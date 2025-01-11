@@ -1,0 +1,171 @@
+Report:
+QUESTION 1: Provide answers to the following questions:
+• Overview: How many rows (samples) and columns (features) are present in the dataset?
+1This dataset was extracted from the search feature in The GDELT Project and a recursive crawler that traverses
+resulting news links
+1
+• Histograms: Plot 3 histograms on : (a) The total number of alpha-numeric characters per
+data point (row) in the feature full text: i.e count on the x-axis and frequency on the y-axis;
+(b) The column leaf label – class on the x-axis; (c) The column root label – class on the
+x-axis.
+• Interpret Plots: Provide qualitative interpretations of the histograms.
+
+QUESTION 2: Report the number of training and testing samples.
+
+QUESTION 3: Use the following specs to extract features from the textual data:
+• Before doing anything, please clean each data sample using the code block provided above.
+This function helps remove many but not all HTML artefacts from the crawler’s output. You
+can also build your own cleaning module if you find this function to be ineffective.
+• Use the “english” stopwords of the CountVectorizer
+4
+• Exclude terms that are numbers (e.g. “123”, “-45”, “6.7” etc.)
+• Perform lemmatization with nltk.wordnet.WordNetLemmatizer and pos tag
+• Use min df=3
+Please answer the following questions:
+• What are the pros and cons of lemmatization versus stemming? How do these processes affect
+the dictionary size?
+• min df means minimum document frequency. How does varying min df change the TF-IDF
+matrix?
+• Should I remove stopwords before or after lemmatizing? Should I remove punctuations before
+or after lemmatizing? Should I remove numbers before or after lemmatizing? Hint: Recall
+that the full sentence is input into the Lemmatizer and the lemmatizer is tagging the position
+of every word based on the sentence structure.
+• Report the shape of the TF-IDF-processed train and test matrices. The number of rows should
+match the results of Question 2. The number of columns should roughly be in the order of
+k ×103. This dimension will vary depending on your exact method of cleaning and lemmatizing
+and that is okay.
+
+QUESTION 4: Reduce the dimensionality of the data using the methods above:
+• Plot the explained variance ratio across multiple different k = [1, 5, 10, 25, 50, 100, 500, 1000]
+for LSI and for the next few sections choose k = 25. What does the explained variance ratio
+plot look like? What does the plot’s concavity suggest?
+• With k = 25 found in the previous sections, calculate the reconstruction residual MSE error
+when using LSI and NMF – they both should use the same k = 25. Which one is larger, the
+∥X − WH∥2
+F in NMF or the X − UkΣkVT
+k
+2
+F in LSI and why?
+
+QUESTION 5: Compare and contrast hard-margin and soft-margin linear SVMs:
+• Train two linear SVMs:
+– Train one SVM with γ = 2000 (hard margin), another with γ = 0.0005 (soft margin).
+– Plot the ROC curve, report the confusion matrix and calculate the accuracy, recall,
+precision and F-1 score of both SVM classifiers on the testing set. Which one performs
+better? What about for γ = 100000?
+– What happens for the soft margin SVM? Why is the case? Analyze in terms of the
+confusion matrix.
+7
+∗ Does the ROC curve reflect the performance of the soft-margin SVM? Why?
+• Use cross-validation to choose γ (use average validation 3 accuracy to compare): Using a
+5-fold cross-validation, find the best value of the parameter γ in the range {10k| − 3 ≤ k ≤
+6, k ∈ Z}. Again, plot the ROC curve and report the confusion matrix and calculate the
+accuracy, recall precision and F-1 score of this best SVM
+
+QUESTION 6: Evaluate a logistic classifier:
+• Train a logistic classifier without regularization (you may need to come up with some way to
+approximate this if you use sklearn.linear model.LogisticRegression); plot the ROC
+curve and report the confusion matrix and calculate the accuracy, recall precision and F-1
+score of this classifier on the testing set.
+• Find the optimal regularization coefficient:
+– Using 5-fold cross-validation on the dimension-reduced-by-SVD training data, find the op-
+timal regularization strength in the range {10k|−5 ≤ k ≤ 5, k ∈ Z} for logistic regression
+with L1 regularization and logistic regression with L2 regularization, respectively.
+– Compare the performance (accuracy, precision, recall and F-1 score) of 3 logistic classi-
+fiers: w/o regularization, w/ L1 regularization and w/ L2 regularization (with the best
+parameters you found from the part above), using test data.
+– How does the regularization parameter affect the test error? How are the learnt coeffi-
+cients affected? Why might one be interested in each type of regularization?
+– Both logistic regression and linear SVM are trying to classify data points using a linear
+decision boundary. What is the difference between their ways to find this boundary? Why
+do their performances differ? Is this difference statistically significant?
+
+QUESTION 7: Evaluate and profile a Na ̈ıve Bayes classifier: Train a GaussianNB classifier; plot
+the ROC curve and report the confusion matrix and calculate the accuracy, recall, precision and
+F-1 score of this classifier on the testing set.
+
+QUESTION 8: In this part, you will attempt to find the best model for binary classification.
+• Construct a Pipeline that performs feature extraction, dimensionality reduction and classifi-
+cation;
+• The evaluation of each combination is performed with 5-fold cross-validation (use the average
+validation set accuracy across folds).
+• In addition to any other hyperparameters you choose, your gridsearch must at least include:
+Table 1: Minimum set of hyperparameters to consider for pipeline comparison
+Module Options
+Loading Data Clean the data
+Feature Extraction min df = 2 vs 5 while constructing the vocabulary; AND
+use Lemmatization vs Stemming as a compression module
+Dimensionality Reduction LSI (k = [5, 30, 100]) vs NMF (k = [5, 30, 100])
+Classifier
+SVM with the best γ previously found
+vs
+Logistic Regression: L1 regularization vs L2 regularization,
+with the best regularization strength previously found
+vs
+GaussianNB
+Note: You can once again find the optimal hyperparameters
+for each classifier, but this is not required.
+Other options Use default
+• What are the 5 best combinations? Report their performances on the testing set.
+
+QUESTION 9: In this part, we aim to learn classifiers on the documents belonging to unique
+classes in the column leaf label.
+Perform Na ̈ıve Bayes classification and multiclass SVM classification (with both One VS One and
+One VS the rest methods described above) and report the confusion matrix and calculate the
+accuracy, recall, precision and F-1 score of your classifiers. How did you resolve the class
+imbalance issue in the One VS the rest model?
+In addition, answer the following questions:
+• In the confusion matrix you should have an 10 × 10 matrix where 10 is the number of unique
+labels in the column leaf label. Please make sure that the order of these labels is as
+follows:
+map_row_to_class = {0:"basketball", 1:"baseball", 2:"tennis",
+3:"football", 4:"soccer", 5:"forest fire", 6:"flood",
+7:"earthquake", 8:"drought", 9:"heatwave"}
+,→
+,→
+Do you observe any structure in the confusion matrix? Are there distinct visible blocks on the
+major diagonal? What does this mean?
+• Based on your observation from the previous part, suggest a subset of labels that should be
+merged into a new larger label and recompute the accuracy and plot the confusion matrix.
+How did the accuracy change in One VS One and One VS the rest?
+• Does class imbalance impact the performance of the classification once some classes are
+merged? Provide a resolution for the class imbalance and recompute the accuracy and plot
+the confusion matrix in One VS One and One VS the rest?
+
+QUESTION 10: Read the paper about GLoVE embeddings - found here and answer the following
+subquestions:
+(a) Why are GLoVE embeddings trained on the ratio of co-occurrence probabilities rather than
+the probabilities themselves?
+(b) In the two sentences: “James is running in the park.” and “James is running for the
+presidency.”, would GLoVE embeddings return the same vector for the word running in both
+cases? Why or why not?
+(c) What do you expect for the values of,
+||GLoVE["left"] - GLoVE["right"]||2, ||GLoVE["wife"] - GLoVE["husband"]||2 and
+||GLoVE["wife"] - GLoVE["orange"]||2 ? Compare these values.
+(d) Given a word, would you rather stem or lemmatize the word before mapping it to its GLoVE
+embedding?
+
+QUESTION 11: For the binary classification task distinguishing the “sports” class and “climate”
+class:
+(a) Describe a feature engineering process that uses GLoVE word embeddings to represent each
+document. You have to abide by the following rules:
+• A representation of a text segment needs to have a vector dimension that CANNOT
+exceed the dimension of the GLoVE embedding used per word of the segment.
+• You cannot use TF-IDF scores (or any measure that requires looking at the complete
+dataset) as a pre-processing routine.
+• Important: In this section, feel free to use raw features from any column in the original
+data file not just full text. The column keywords might be useful... or not. Make
+sure that your result achieves an accuracy of at least 92%.
+• To aggregate these words into a single vector consider normalization the vectors, averaging
+across the vectors.
+(b) Select a classifier model, train and evaluate it with your GLoVE-based feature. If you are doing
+any cross-validation, please make sure to use a limited set of options so that your code finishes
+running in a reasonable amount of time.
+
+QUESTION 12: Plot the relationship between the dimension of the pre-trained GLoVE embedding
+and the resulting accuracy of the model in the classification task. Describe the observed trend. Is
+this trend expected? Why or why not? In this part use the different sets of GLoVE vectors from the
+link.
+
+QUESTION 13: Compare and contrast the two visualizations. Are there clusters formed in either
+or both of the plots? We will pursue the clustering aspect further in the next project.                                                      
