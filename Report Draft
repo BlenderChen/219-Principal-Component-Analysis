@@ -27,16 +27,30 @@ can also build your own cleaning module if you find this function to be ineffect
 Please answer the following questions:
 • What are the pros and cons of lemmatization versus stemming? How do these processes affect
 the dictionary size?
+
+idea: lemmatization keeps a true word, but can lose specific meanings, taking into account the part of speech is helpful for better semantic context 
+It is however slower and more computationally expensive than stemming
+Lemmatization also created a smaller dictionary size as different forms of the same word break down to the same final word (does not consolidate forms)
+
 • min df means minimum document frequency. How does varying min df change the TF-IDF
 matrix?
+
+idea: this excludes terms that do not appear in at least the number of documents. So, if the word is too infrequent, it will not be added to the dictionary. As the min_df increases, the length of the dictionary decreases.
+
 • Should I remove stopwords before or after lemmatizing? Should I remove punctuations before
 or after lemmatizing? Should I remove numbers before or after lemmatizing? Hint: Recall
 that the full sentence is input into the Lemmatizer and the lemmatizer is tagging the position
 of every word based on the sentence structure.
+
+idea: remove all of the above after lemmatization as the entire sentence helps with the lemmatization tagging. 
+
 • Report the shape of the TF-IDF-processed train and test matrices. The number of rows should
 match the results of Question 2. The number of columns should roughly be in the order of
 k ×103. This dimension will vary depending on your exact method of cleaning and lemmatizing
 and that is okay.
+
+(2780, 12768)
+(696, 12768)
 
 QUESTION 4: Reduce the dimensionality of the data using the methods above:
 • Plot the explained variance ratio across multiple different k = [1, 5, 10, 25, 50, 100, 500, 1000]
