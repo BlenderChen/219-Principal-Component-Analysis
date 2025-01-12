@@ -12,6 +12,9 @@ x-axis.
 
 QUESTION 2: Report the number of training and testing samples.
 
+Train length:  2780
+Test length:  696
+
 QUESTION 3: Use the following specs to extract features from the textual data:
 • Before doing anything, please clean each data sample using the code block provided above.
 This function helps remove many but not all HTML artefacts from the crawler’s output. You
