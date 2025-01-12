@@ -14,6 +14,27 @@ def extract_alphanumeric(text):
 def count_alphanumeric(text):
     return len(re.findall(r"[A-Za-z0-9]", text))
 
+def clean(text):
+    text = re.sub(r'^https?:\/\/.*[\r\n]*', '', text, flags=re.MULTILINE)
+    texter = re.sub(r"<br />", " ", text)
+    texter = re.sub(r"&quot;", "\"",texter)
+    texter = re.sub('&#39;', "\"", texter)
+    texter = re.sub('\n', " ", texter)
+    texter = re.sub(' u '," you ", texter)
+    texter = re.sub('`',"", texter)
+    texter = re.sub(' +', ' ', texter)
+    texter = re.sub(r"(!)\1+", r"!", texter)
+    texter = re.sub(r"(\?)\1+", r"?", texter)
+    texter = re.sub('&amp;', 'and', texter)
+    texter = re.sub('\r', ' ',texter)
+    clean = re.compile('<.*?>')
+    texter = texter.encode('ascii', 'ignore').decode('ascii')
+    texter = re.sub(clean, '', texter)
+    if texter == "":
+        texter = ""
+    return texter
+
+
 # Hierarchy for the leaf_label
 leaf_label_order = ['basketball', 'baseball', 'tennis', 'football', 'soccer', 'forest fire', 'flood', 'earthquake', 'drought', 'heatwave']
 
