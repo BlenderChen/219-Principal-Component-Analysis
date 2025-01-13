@@ -131,11 +131,11 @@ vectorizer = CountVectorizer(stop_words='english', min_df=3)
 train_data_vec = vectorizer.fit_transform(train["clean_text"])
 test_data_vec = vectorizer.transform(test["clean_text"])
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 
-tfidf = TfidfVectorizer(stop_words='english', min_df=3)
-train_data_tfidf = tfidf.fit_transform(train["clean_text"])
-test_data_tfidf = tfidf.transform(test["clean_text"])
+tfidf = TfidfTransformer()
+train_data_tfidf = tfidf.fit_transform(train_data_vec)
+test_data_tfidf = tfidf.transform(test_data_vec)
 
 print(train_data_tfidf.shape) #both vecotrizers return the same shape
 print(test_data_tfidf.shape)
