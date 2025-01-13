@@ -79,3 +79,64 @@ from sklearn.model_selection import train_test_split
 #spliting the data set into 80% training and 20% testing randomly
 train, test = train_test_split(df[["full_text", "root_label"]], test_size=0.2) 
 
+# Q3 start - clean and extract features
+import nltk as nltk
+from sklearn.feature_extraction.text import CountVectorizer
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+
+lemmatizer = WordNetLemmatizer()
+def get_wordnet_pos(tag):
+    if tag.startswith('J'):
+        return 'a'  # Adjective
+    elif tag.startswith('V'):
+        return 'v'  # Verb
+    elif tag.startswith('N'):
+        return 'n'  # Noun
+    elif tag.startswith('R'):
+        return 'r'  # Adverb
+    else:
+        return 'n'  # Default to noun
+
+def lemmatize_text(text):
+    return " ".join(
+        [
+            lemmatizer.lemmatize(word, pos=get_wordnet_pos(tag))
+            for word, tag in pos_tag(nltk.word_tokenize(text)) 
+        ]
+    )
+
+#-- above creation of lemmatizer and set up
+#  Cleaning text, lemmatizing it, and then removing punctuation and numeric characters
+clean_text = []
+for text in train["full_text"]:
+    text = clean(text).lower()
+    text = lemmatize_text(text)
+    text = ''.join(char for char in text if char.isalpha() or char.isspace())
+    clean_text.append(text)
+train["clean_text"] = clean_text
+
+clean_test = []
+for text in test["full_text"]:
+    text = clean(text).lower()
+    text = lemmatize_text(text)
+    text = ''.join(char for char in text if char.isalpha() or char.isspace())
+    clean_test.append(text)
+test["clean_text"] = clean_test
+
+print(test["clean_text"])
+
+# Vectorization - (1) just counting frequency (2) tfidf normalizing
+vectorizer = CountVectorizer(stop_words='english', min_df=3)
+train_data_vec = vectorizer.fit_transform(train["clean_text"])
+test_data_vec = vectorizer.transform(test["clean_text"])
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfidf = TfidfVectorizer(stop_words='english', min_df=3)
+train_data_tfidf = tfidf.fit_transform(train["clean_text"])
+test_data_tfidf = tfidf.transform(test["clean_text"])
+
+print(train_data_tfidf.shape) #both vecotrizers return the same shape
+print(test_data_tfidf.shape)
+print(test_data_tfidf)
